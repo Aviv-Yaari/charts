@@ -10,15 +10,14 @@ import {
   Tooltip,
   Legend,
   TimeScale,
-  Point,
 } from 'chart.js';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Alert } from '../App';
 import { useFetch } from '../hooks/useFetch';
-import { httpService } from '../services/http.service';
 import { DataPoint, pointService } from '../services/point.service';
 import { useInterval } from '../hooks/useInterval';
 import 'chartjs-adapter-date-fns';
+import { differenceInSeconds } from 'date-fns';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, TimeScale, Title, Tooltip, Legend);
 
@@ -43,13 +42,6 @@ export function Chart({ setAlert }: Props) {
 
   // Update Chart
   useInterval(() => {
-    // better time complexity, less accurate:
-    const now = new Date(Date.now());
-    const formattedTime = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
-    // setLabels(labels => [...labels, formattedTime]);
-    // setDataset(dataset => [...dataset, points[points.length - 1]?.num || 0]);
-
-    // bad time complexity, accurate:
     setLabels(() => points.map(point => point.timestamp));
     setDataset(() => points.map(point => point.num));
   }, 1000);
@@ -57,7 +49,12 @@ export function Chart({ setAlert }: Props) {
   // Update Points
   useInterval(async () => {
     const { num } = await fetchPoint(pointService.get);
-    setPoints(points => [...points, { timestamp: Date.now(), num }]);
+    setPoints(points => {
+      const copy = [...points];
+      if (points[0] && differenceInSeconds(Date.now(), points[0].timestamp) > 180) copy.shift();
+      copy.push({ timestamp: Date.now(), num });
+      return copy;
+    });
   }, 250);
 
   const data = {
@@ -68,15 +65,18 @@ export function Chart({ setAlert }: Props) {
         data: dataset,
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        pointRadius: 1,
       },
     ],
   };
   return (
     <StyledChart>
-      <h2>Chart</h2>
       <Line
         options={{
           responsive: true,
+          animation: {
+            duration: 0,
+          },
           scales: {
             x: {
               type: 'time',
@@ -90,7 +90,7 @@ export function Chart({ setAlert }: Props) {
           },
           plugins: {
             legend: {
-              position: 'top' as const,
+              display: false,
             },
           },
         }}

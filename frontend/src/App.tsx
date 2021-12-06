@@ -3,7 +3,7 @@ import { GlobalStyle } from './assets/styles/general/GlobalStyle.styled';
 import { MainContainer } from './assets/styles/MainContainer.styled';
 import { AppHeader } from './components/AppHeader';
 import { Chart } from './components/Chart';
-import { LoginSignup } from './components/LoginSignup';
+import { Login } from './components/Login';
 import { useFetch } from './hooks/useFetch';
 import { authService, getCurrentUser } from './services/auth.service';
 
@@ -27,7 +27,7 @@ function App() {
       <GlobalStyle />
       <MainContainer>
         <AppHeader />
-        {user ? <Chart setAlert={setAlert} /> : <LoginSignup onLogin={handleLogin} />}
+        {user ? <Chart setAlert={setAlert} /> : <Login onLogin={handleLogin} />}
         {alert && <div>Alert! {JSON.stringify(alert)}</div>}
       </MainContainer>
     </>
