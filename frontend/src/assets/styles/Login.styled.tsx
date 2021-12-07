@@ -6,10 +6,13 @@ export const StyledLogin = styled.form`
   text-align: center;
   width: 100vw;
   max-width: 300px;
-  gap: 20px;
+  gap: 10px;
   background: #fff;
   padding: 20px;
-  input {
+  input:last-of-type {
+    margin-bottom: 10px;
+  }
+  input:first-of-type {
     margin-top: 10px;
   }
 `;

@@ -18,17 +18,7 @@ import { DataPoint, pointService } from '../services/point.service';
 import { useInterval } from '../hooks/useInterval';
 import 'chartjs-adapter-date-fns';
 import { differenceInSeconds } from 'date-fns';
-
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, TimeScale, Title, Tooltip, Legend);
-
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top' as const,
-    },
-  },
-};
 
 interface Props {
   setAlert: React.Dispatch<React.SetStateAction<Alert | null>>;
@@ -38,21 +28,33 @@ export function Chart({ setAlert }: Props) {
   const { fetchData: fetchPoint } = useFetch(setAlert);
   const [points, setPoints] = useState<DataPoint[]>([]);
   const [labels, setLabels] = useState<number[]>([]);
-  const [dataset, setDataset] = useState<number[]>([]);
+  const [dataset1, setDataset1] = useState<number[]>([]);
+  const [dataset2, setDataset2] = useState<number[]>([]);
 
   // Update Chart
   useInterval(() => {
-    setLabels(() => points.map(point => point.timestamp));
-    setDataset(() => points.map(point => point.num));
+    const { labels, dataset1, dataset2 } = points.reduce(
+      (res, point) => {
+        res.labels.push(point.timestamp);
+        res.dataset1.push(point.num1);
+        res.dataset2.push(point.num2);
+        return res;
+      },
+      { labels: [] as number[], dataset1: [] as number[], dataset2: [] as number[] }
+    );
+    setLabels(labels);
+    setDataset1(dataset1);
+    setDataset2(dataset2);
   }, 1000);
 
   // Update Points
   useInterval(async () => {
-    const { num } = await fetchPoint(pointService.get);
+    const { num: num1 } = await fetchPoint(pointService.get);
+    const { num: num2 } = await fetchPoint(pointService.get);
     setPoints(points => {
       const copy = [...points];
       if (points[0] && differenceInSeconds(Date.now(), points[0].timestamp) > 180) copy.shift();
-      copy.push({ timestamp: Date.now(), num });
+      copy.push({ timestamp: Date.now(), num1, num2 });
       return copy;
     });
   }, 250);
@@ -61,11 +63,18 @@ export function Chart({ setAlert }: Props) {
     labels,
     datasets: [
       {
-        label: 'value',
-        data: dataset,
+        borderWidth: 1,
+        data: dataset1,
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        pointRadius: 1,
+        pointRadius: 0,
+      },
+      {
+        borderWidth: 1,
+        data: dataset2,
+        borderColor: 'rgb(99, 128, 255)',
+        backgroundColor: 'rgba(109, 99, 255, 0.5)',
+        pointRadius: 0,
       },
     ],
   };
@@ -80,7 +89,6 @@ export function Chart({ setAlert }: Props) {
           scales: {
             x: {
               type: 'time',
-
               time: {
                 unit: 'second',
                 stepSize: 10,

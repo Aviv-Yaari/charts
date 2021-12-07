@@ -2,7 +2,8 @@ import { httpService } from './http.service';
 
 export interface DataPoint {
   timestamp: number;
-  num: number;
+  num1: number;
+  num2: number;
 }
 
 const get = async () => {

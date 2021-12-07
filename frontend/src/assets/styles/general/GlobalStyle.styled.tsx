@@ -9,12 +9,12 @@ export const GlobalStyle = createGlobalStyle<{ theme: any }>`
   }
 
   body {
-      font-family: 'Red Hat Display', sans-serif;
+      font-family: 'Roboto', sans-serif;
       line-height: 1.5;
   }
   
   h1,h2 {
-    font-weight: 900;
+    font-weight: 700;
     font-size: 1.5em;
   }
 

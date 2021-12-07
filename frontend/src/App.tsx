@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AppAlert } from './components/AppAlert';
 import { GlobalStyle } from './assets/styles/general/GlobalStyle.styled';
 import { MainContainer } from './assets/styles/MainContainer.styled';
 import { AppHeader } from './components/AppHeader';
@@ -18,7 +19,11 @@ function App() {
   const { fetchData } = useFetch(setAlert);
 
   const handleLogin = async (username: string, password: string) => {
-    const user = await fetchData(() => authService.login(username, password));
+    const user = await fetchData(
+      () => authService.login(username, password),
+      'Could not login',
+      'Logged in successfuly'
+    );
     setUser(user);
   };
 
@@ -28,7 +33,7 @@ function App() {
       <MainContainer>
         <AppHeader />
         {user ? <Chart setAlert={setAlert} /> : <Login onLogin={handleLogin} />}
-        {alert && <div>Alert! {JSON.stringify(alert)}</div>}
+        {alert && <AppAlert onClose={() => setAlert(null)} alert={alert} />}
       </MainContainer>
     </>
   );
