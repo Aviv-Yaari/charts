@@ -25,7 +25,7 @@ interface Props {
 }
 
 export function Chart({ setAlert }: Props) {
-  const { fetchData: fetchPoint } = useFetch(setAlert);
+  const { fetchData: fetchPoint, error } = useFetch(setAlert);
   const [points, setPoints] = useState<DataPoint[]>([]);
   const [labels, setLabels] = useState<number[]>([]);
   const [dataset1, setDataset1] = useState<number[]>([]);
@@ -49,15 +49,17 @@ export function Chart({ setAlert }: Props) {
 
   // Update Points
   useInterval(async () => {
-    const { num: num1 } = await fetchPoint(pointService.get);
-    const { num: num2 } = await fetchPoint(pointService.get);
+    if (error) return; // prevent too many requests when server is potentially down
+    const point1 = await fetchPoint(pointService.get);
+    const point2 = await fetchPoint(pointService.get);
+    if (!point1 || !point2) return;
     setPoints(points => {
       const copy = [...points];
       if (points[0] && differenceInSeconds(Date.now(), points[0].timestamp) > 180) copy.shift();
-      copy.push({ timestamp: Date.now(), num1, num2 });
+      copy.push({ timestamp: Date.now(), num1: point1.num, num2: point2.num });
       return copy;
     });
-  }, 250);
+  }, 2500);
 
   const data = {
     labels,

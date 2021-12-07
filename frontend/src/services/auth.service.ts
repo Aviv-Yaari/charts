@@ -1,6 +1,7 @@
 import { httpService } from './http.service';
 
-interface User {
+export interface User {
+  _id: string;
   username: string;
   fullname: string;
 }
@@ -13,7 +14,8 @@ const login = async (username: string, password: string) => {
 
 const logout = async () => {
   sessionStorage.clear();
-  return httpService.post('auth/logout');
+  await httpService.post('auth/logout');
+  return null;
 };
 
 const signup = async (username: string, fullname: string, password: string) => {
@@ -22,7 +24,14 @@ const signup = async (username: string, fullname: string, password: string) => {
   return user;
 };
 
-export const getCurrentUser = () => {
+const reloadUser = async () => {
+  const user = await httpService.get('auth/current');
+  if (user) _saveToStorage(user);
+  else sessionStorage.clear();
+  return user;
+};
+
+const getCurrentUser = () => {
   try {
     const user = sessionStorage.getItem('user');
     return user ? JSON.parse(user) : null;
@@ -31,7 +40,7 @@ export const getCurrentUser = () => {
   }
 };
 
-export const authService = { login, logout, signup };
+export const authService = { login, logout, signup, getCurrentUser, reloadUser };
 
 function _saveToStorage(user: User) {
   sessionStorage.setItem('user', JSON.stringify(user));

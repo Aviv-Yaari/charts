@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import { Alert } from '../../App';
 
 export const StyledAppAlert = styled.div<{ type: Alert['type'] }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   position: fixed;
   top: 80px;
   left: 50%;
