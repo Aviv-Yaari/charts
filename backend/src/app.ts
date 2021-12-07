@@ -36,10 +36,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 //#region DB:
-const dbProd = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jxpry.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
-const dbDev = 'mongodb://localhost:27017';
-// const dbUrl = process.env.NODE_ENV === 'production' ? dbProd : dbDev;
-const dbUrl = dbProd; // for dev purposes
+const dbUrl = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jxpry.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 mongoose.connect(dbUrl);
 
 //#region Routes:
