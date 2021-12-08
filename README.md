@@ -1,4 +1,7 @@
 # charts
+Heroku deploy: https://aviv-charts.herokuapp.com/  
+Dummy login with: username = username, password = password.
+  
 ![image](https://user-images.githubusercontent.com/84678031/145182938-650b7571-0fb4-4041-b366-8b337e57342e.png)
 
 ## Install Guide - Docker  
