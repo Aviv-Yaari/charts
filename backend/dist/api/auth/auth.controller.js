@@ -11,8 +11,8 @@ const login = async (req, res) => {
 };
 exports.login = login;
 const signup = async (req, res) => {
-    const { username, fullname, password } = req.body;
-    await auth_service_1.authService.signup(username, fullname, password);
+    const { username, password } = req.body;
+    await auth_service_1.authService.signup(username, password);
     const user = await auth_service_1.authService.login(username, password);
     req.session.user = { _id: user._id, username };
     res.send(user);

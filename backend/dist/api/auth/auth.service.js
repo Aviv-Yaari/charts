@@ -17,16 +17,16 @@ const login = async (username, password) => {
         throw new error_service_1.ExpressError('Invalid username or password', 401);
     return { ...user.toJSON(), _id: user._id, password: undefined };
 };
-const signup = async (username, fullname, password) => {
+const signup = async (username, password) => {
     const saltRounds = 10;
     logger_service_1.logger.debug(`Signup with username: ${username}`);
-    if (!username || !password || !fullname)
-        throw new error_service_1.ExpressError('fullname, username and password are required', 400);
+    if (!username || !password)
+        throw new error_service_1.ExpressError('username and password are required', 400);
     const existingUser = await user_service_1.userService.query({ username });
     if (existingUser)
         throw new error_service_1.ExpressError('User already exists', 400);
     const hash = await bcrypt_1.default.hash(password, saltRounds);
-    await user_service_1.userService.add({ username, password: hash, fullname });
-    return { username, password: hash, fullname };
+    await user_service_1.userService.add({ username, password: hash });
+    return { username, password: hash };
 };
 exports.authService = { login, signup };

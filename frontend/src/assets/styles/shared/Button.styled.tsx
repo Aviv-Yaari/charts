@@ -8,7 +8,11 @@ export const Button = styled.button`
   cursor: pointer;
   font-family: inherit;
   font-size: 0.9em;
-  ${props => props.disabled && css`pointer-events: none;`}
+  ${props =>
+    props.disabled &&
+    css`
+      pointer-events: none;
+    `}
 `;
 
 export const ButtonPrimary = styled(Button)`
@@ -41,4 +45,14 @@ export const ButtonIcon = styled.button`
   &:hover {
     background: #b1b1b128;
   }
+`;
+
+export const ButtonLink = styled.button`
+  display: inline-block;
+  background: transparent;
+  border: none;
+  color: #1dbf73;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-family: inherit;
 `;

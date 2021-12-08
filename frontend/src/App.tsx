@@ -35,12 +35,25 @@ function App() {
     setUser(user);
   };
 
+  const handleSignup = async (username: string, password: string) => {
+    const user = await fetchData(
+      () => authService.signup(username, password),
+      'Could not sign up',
+      'Signed up successfuly'
+    );
+    setUser(user);
+  };
+
   return (
     <>
       <GlobalStyle />
       <MainContainer>
         <AppHeader user={user} onLogout={handleLogout} />
-        {user ? <Chart setAlert={setAlert} /> : <Login onLogin={handleLogin} isLoading={isLoading} />}
+        {user ? (
+          <Chart setAlert={setAlert} />
+        ) : (
+          <Login onLogin={handleLogin} onSignup={handleSignup} isLoading={isLoading} />
+        )}
         {alert && <AppAlert onClose={() => setAlert(null)} alert={alert} />}
       </MainContainer>
     </>

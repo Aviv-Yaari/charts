@@ -18,8 +18,8 @@ const logout = async () => {
   return null;
 };
 
-const signup = async (username: string, fullname: string, password: string) => {
-  const user = await httpService.post('auth/signup', { username, fullname, password });
+const signup = async (username: string, password: string) => {
+  const user = await httpService.post('auth/signup', { username, password });
   _saveToStorage(user);
   return user;
 };

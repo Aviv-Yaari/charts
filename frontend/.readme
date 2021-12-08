@@ -1,0 +1,5 @@
+docker:  
+build:  
+docker build . -t charts-frontend
+run:  
+docker run --rm -it -p 3000:3000/tcp charts-frontend:latest

@@ -10,8 +10,8 @@ export const login: RequestHandler = async (req, res) => {
 };
 
 export const signup: RequestHandler = async (req, res) => {
-  const { username, fullname, password } = req.body;
-  await authService.signup(username, fullname, password);
+  const { username, password } = req.body;
+  await authService.signup(username, password);
   const user = await authService.login(username, password);
   req.session.user = { _id: user._id, username };
   res.send(user);

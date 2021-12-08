@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import { StyledLogin } from '../assets/styles/Login.styled';
-import { ButtonPrimary, ButtonSecondary } from '../assets/styles/shared/Button.styled';
+import { ButtonLink, ButtonPrimary } from '../assets/styles/shared/Button.styled';
 import { Input } from '../assets/styles/shared/Input.styled';
 
 interface Props {
   onLogin: (username: string, password: string) => void;
+  onSignup: (username: string, password: string) => void;
   isLoading: boolean;
 }
-export function Login({ onLogin, isLoading }: Props) {
+export function Login({ onLogin, onSignup, isLoading }: Props) {
   const [values, setValues] = useState({ username: '', password: '' });
+  const [page, setPage] = useState<'login' | 'signup'>('login');
 
-  const handleLogin: React.FormEventHandler<HTMLFormElement> = async ev => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async ev => {
     ev.preventDefault();
-    onLogin(values.username, values.password);
+    if (page === 'login') onLogin(values.username, values.password);
+    else onSignup(values.username, values.password);
   };
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ev => {
@@ -21,14 +24,17 @@ export function Login({ onLogin, isLoading }: Props) {
   };
 
   return (
-    <StyledLogin onSubmit={handleLogin}>
-      <h2>Log in</h2>
-      <Input name="username" type="text" placeholder="Username" onChange={handleChange} />
-      <Input name="password" type="password" placeholder="Password" onChange={handleChange} />
-      <ButtonPrimary disabled={isLoading}>{isLoading ? 'Logging in..' : 'Continue'}</ButtonPrimary>
-      <ButtonSecondary disabled={isLoading} type="button" onClick={() => onLogin('username', 'password')}>
-        Easy login - for dev purposes
-      </ButtonSecondary>
+    <StyledLogin onSubmit={handleSubmit}>
+      <h2>{page === 'login' ? 'Log in' : 'Sign up'}</h2>
+      <Input name="username" type="text" placeholder="Username" onChange={handleChange} required />
+      <Input name="password" type="password" placeholder="Password" onChange={handleChange} required />
+      <ButtonPrimary disabled={isLoading}>{isLoading ? 'Loading..' : 'Continue'}</ButtonPrimary>
+      <div>
+        <span>{page === 'login' ? 'Not a member?' : 'Already a member?'}</span>
+        <ButtonLink disabled={isLoading} type="button" onClick={() => setPage(page === 'login' ? 'signup' : 'login')}>
+          {page === 'login' ? 'Sign up' : 'Log In'}
+        </ButtonLink>
+      </div>
     </StyledLogin>
   );
 }
