@@ -59,7 +59,7 @@ export function Chart({ setAlert }: Props) {
       copy.push({ timestamp: Date.now(), num1: point1.num, num2: point2.num });
       return copy;
     });
-  }, 2500);
+  }, 250);
 
   const data = {
     labels,
