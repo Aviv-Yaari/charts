@@ -7,9 +7,6 @@ const schema = new mongoose_1.Schema({
         type: String,
         required: true,
         unique: true,
-        minlength: 4,
-        maxlength: 15,
-        validate: /^[a-zA-Z0-9_]*$/,
     },
     password: { type: String, required: true },
 });
