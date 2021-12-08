@@ -22,7 +22,7 @@ This command will run the backend server on port 3030. Also, a Mongo database wi
 
 ## Additional Notes
 • Client is resistant to server shutdowns. While getting the random data points from the server, if there's an error -
-the client will stop sending requests until a refresh is made, in order to prevent excessive redundant calls.
-• The interval clears on chart unmount in order to prevent a leak.
-• useInterval custom hook to deal with intervals.
-• This is my first docker deploy, so I hope everything is ok..  
+the client will stop sending requests until a refresh is made, in order to prevent excessive redundant calls.  
+• The interval clears on chart unmount in order to prevent a leak.  
+• useInterval custom hook to deal with intervals.  
+• This is my first docker deploy, so I hope everything is ok..    
